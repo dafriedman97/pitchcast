@@ -1,0 +1,18 @@
+name: pitchcast
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10.*
+  - numpy=1.23.*
+  - pandas=1.5.*
+  - scikit-learn=1.1*
+  - scipy=1.9.*
+  - matplotlib=3.6.*
+  - seaborn=0.12.*
+  - jupyterlab=3.4.*
+  - tensorflow=2.10.*
+  - ipdb=0.13.*
+  - pip=22.2.*
+  - pip:
+    - MLB-StatsAPI==1.5.1
