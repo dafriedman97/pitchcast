@@ -1,5 +1,4 @@
 import statsapi
-import pandas as pd
 from dataclasses import dataclass
 from typing import List, Tuple, Dict
 
@@ -17,10 +16,13 @@ class AtBat:
     outs: int
     pitcher_name: str
     pitcher_id: int
-    pitcher_lefy: bool
+    pitcher_lefty: bool
     batter_name: str
     batter_id: int
-    batter_leftie: bool
+    batter_lefty: bool
+    runner_1: bool
+    runner_2: bool
+    runner_3: bool
     pitches: List[Pitch]
 
 ## Season-Level
@@ -73,9 +75,25 @@ def get_at_bat_data(at_bat):
     batter_name = matchup['batter']['fullName']
     batter_id = matchup['batter']['id']
     batter_lefty = matchup['batSide']['code'] == "L"
-
+    runner_1, runner_2, runner_3 = get_runners(at_bat)
     pitches = get_pitch_data(at_bat)
-    at_bat = AtBat(inning, top, home_score, away_score, outs, pitcher_name, pitcher_id, pitcher_lefty, batter_name, batter_id, batter_lefty, pitches)
+    at_bat = AtBat(
+        inning,
+        top,
+        home_score,
+        away_score,
+        outs,
+        pitcher_name,
+        pitcher_id,
+        pitcher_lefty,
+        batter_name,
+        batter_id,
+        batter_lefty,
+        runner_1,
+        runner_2,
+        runner_3,
+        pitches
+    )
     return at_bat
 
 def get_score(at_bat):
@@ -90,6 +108,12 @@ def get_score(at_bat):
         else:
             home_score -= at_bat_runs
     return home_score, away_score
+
+def get_runners(at_bat):
+    """Helper: get location of runners during at bat"""
+    origins = set(runner['movement']['originBase'] for runner in at_bat['runners'])
+    bases = ["1B" in origins, "2B" in origins, "3B" in origins]
+    return bases
 
 ## Pitch-Level
 def get_pitch_data(at_bat): 
