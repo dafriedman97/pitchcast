@@ -47,13 +47,21 @@ def get_pitching_lead(df):
 
 def get_last_pitch_type(df):
     """Add column for lagged pitch type"""
-    df['last_pitch_type'] = df['pitch_type'].shift(1)
-    df.loc[(df['count'] == "(0,0)"), 'last_pitch_type'] = None # if new at bat, strip last count
+    df['pitch_type_lag_1'] = df['pitch_type'].shift(1)
+    df['pitch_type_lag_2'] = df['pitch_type'].shift(2)
+    df.loc[df['batter_id'] != df['batter_id'].shift(1), 'pitch_type_lag_1'] = "none" # no lag 1 pitch type for first pitch of at bat
+    df.loc[df['batter_id'] != df['batter_id'].shift(2), 'pitch_type_lag_2'] = "none" # no lag 2 pitch type for first/second pitch of at bat
+    return df
+
+def get_pitch_count(df):
+    """Add number of pitches pitcher has thrown"""
+    df['pitch_count'] = df.groupby(['game_id', 'pitcher_id']).cumcount() + 1
     return df
 
 def clean_data_frame(season_df):
     """Clean up dataframe"""
     season_df = clean_pitch_type(season_df)
     season_df = get_count(season_df)
-    season_df = get_last_pitch_type(season_df)
+    season_df = get_last_pitch_type(season_df) # TODO: get last 2 pitch types
+    season_df = get_pitch_count(season_df)
     return season_df 
