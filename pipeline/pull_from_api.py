@@ -11,6 +11,7 @@ class Pitch:
 class AtBat:
     inning: int
     top: bool
+    at_bat_index: int
     home_score: int
     away_score: int
     outs: int
@@ -30,7 +31,7 @@ def get_season_data(season):
     """Get season-level data"""
     game_ids = get_game_ids(season)
     season_data = dict()
-    for game_id in game_ids: # loop through games
+    for game_id in game_ids[:10]: # loop through games
         game_data = get_game_data(game_id)
         season_data[game_id] = game_data
     return season_data
@@ -67,6 +68,7 @@ def get_at_bat_data(at_bat):
     matchup = at_bat['matchup']
     inning = at_bat['about']['inning']
     top = at_bat['about']['isTopInning']
+    at_bat_index = at_bat['about']['atBatIndex']
     home_score, away_score = get_score(at_bat) # score going into this at_bat
     outs = at_bat['playEvents'][0]['count']['outs'] # outs going into this at_bat
     pitcher_name = matchup['pitcher']['fullName']
@@ -80,6 +82,7 @@ def get_at_bat_data(at_bat):
     at_bat = AtBat(
         inning,
         top,
+        at_bat_index,
         home_score,
         away_score,
         outs,
