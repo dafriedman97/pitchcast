@@ -1,5 +1,4 @@
-import pull_from_api, convert_to_dataframe, add_pitch_rates
-from add_pitch_rates import add_pitcher_pitch_rates
+import pull_from_api, convert_to_dataframe, feature_engineering, add_pitch_rates
 import os
 import argparse
 
@@ -8,7 +7,7 @@ def main(season):
     """Collect, clean, and augment season data"""
     season_data = pull_from_api.get_season_data(season) # pull season data from api
     season_df = convert_to_dataframe.create_raw_data_frame(season_data) # convert into dataframe 
-    season_df = convert_to_dataframe.clean_data_frame(season_df) # clean up    
+    season_df = feature_engineering.create_features(season_df) # add created features
     season_df = add_pitch_rates.add_pitcher_pitch_rates(season_df) # add pitcher's frequency of pitch-types
     return season_df 
 

@@ -31,7 +31,7 @@ def get_season_data(season):
     """Get season-level data"""
     game_ids = get_game_ids(season)
     season_data = dict()
-    for game_id in game_ids[:10]: # loop through games
+    for game_id in game_ids: # loop through games
         game_data = get_game_data(game_id)
         season_data[game_id] = game_data
     return season_data
