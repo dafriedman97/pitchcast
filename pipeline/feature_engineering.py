@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def create_features(season_df):
     """Main function—clean up and augment dataframe"""
