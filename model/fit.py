@@ -129,15 +129,15 @@ if __name__ == "__main__":
     if not os.path.exists(saved_models_dir):
         os.mkdir(saved_models_dir)
     
-    # # Load data
-    # training_seasons = np.arange(first_training_season, last_training_season+1)
-    # df = load_data(training_seasons)
+    # Load data
+    training_seasons = np.arange(first_training_season, last_training_season+1)
+    df = load_data(training_seasons)
  
-    # # Clean/transform/train test split
-    # X_train_numpy, X_val_numpy, y_train_numpy, y_val_numpy = create_train_and_test_data(df, simple=simple_model)
+    # Clean/transform/train test split
+    X_train_numpy, X_val_numpy, y_train_numpy, y_val_numpy = create_train_and_test_data(df, simple=simple_model)
     
-    # # Tune
-    # model = tune_model(X_train_numpy, X_val_numpy, y_train_numpy, y_val_numpy)
+    # Tune
+    model = tune_model(X_train_numpy, X_val_numpy, y_train_numpy, y_val_numpy)
 
-    # # Write out
-    # model.save(os.path.join(saved_models_dir, f"{model_name}.h5"))
+    # Write out
+    model.save(os.path.join(saved_models_dir, f"{model_name}.h5"))
