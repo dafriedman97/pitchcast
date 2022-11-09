@@ -25,10 +25,10 @@ def load_model():
     return model
     
 pitcher_data = load_pitcher_data()
-pitchers_lefty = pitcher_data['pitcher_lefty'].set_index('pitcher_name')
+pitchers_lefty = pitcher_data['pitcher_lefty']
 pitchers_rates = pitcher_data[
     ['fastball_rate', 'sinker_rate', 'slider_rate', 'changeup_rate', 'knuckle_curve_rate', 'curveball_rate', 'cutter_rate', 'splitter_rate', 'other_rate']
-].set_index('pitcher_name')
+]
 
 model = load_model()
 

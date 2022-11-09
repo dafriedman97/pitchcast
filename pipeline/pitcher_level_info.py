@@ -8,4 +8,4 @@ def get_pitcher_level_info(df, min_pitches=100):
     pitcher_level_info = df_last[
         ['pitcher_lefty', 'fastball_rate', 'sinker_rate', 'slider_rate', 'changeup_rate', 'knuckle_curve_rate', 'curveball_rate', 'cutter_rate', 'splitter_rate', 'other_rate']
     ]
-    return pitcher_level_info.reset_index()
+    return pitcher_level_info

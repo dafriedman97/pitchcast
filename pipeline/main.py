@@ -35,5 +35,5 @@ if __name__ == "__main__":
         season_df.to_csv(season_path, index=False)
         if pitcher_info:
             pitcher_info = pitcher_level_info.get_pitcher_level_info(season_df)
-            pitcher_info.to_csv(os.path.join(data_dir, f"pitcher_level_info_{season}.csv"), index=False)
+            pitcher_info.to_csv(os.path.join(data_dir, f"pitcher_level_info_{season}.csv"), index=True)
             
