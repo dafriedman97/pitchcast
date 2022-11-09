@@ -16,7 +16,7 @@ st.set_page_config(
 ### Load Model + Data ###
 @st.cache
 def load_pitcher_data():
-    df = pd.read_csv("data/pitcher_level_info_2022.csv")
+    df = pd.read_csv("data/pitcher_level_info_2022.csv").set_index('pitcher_name')
     return df
 
 @st.cache(allow_output_mutation=True)
@@ -29,6 +29,7 @@ pitchers_lefty = pitcher_data['pitcher_lefty']
 pitchers_rates = pitcher_data[
     ['fastball_rate', 'sinker_rate', 'slider_rate', 'changeup_rate', 'knuckle_curve_rate', 'curveball_rate', 'cutter_rate', 'splitter_rate', 'other_rate']
 ]
+pitchers = sorted(list(pitchers_rates.index))
 
 model = load_model()
 
