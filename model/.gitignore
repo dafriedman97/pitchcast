@@ -1,2 +1,3 @@
 keras_tuner/
 saved_models/
+! saved_models/fit_model_simple.h5
