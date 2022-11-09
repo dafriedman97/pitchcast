@@ -11,7 +11,7 @@ dependencies:
   - matplotlib=3.6.*
   - seaborn=0.12.*
   - jupyterlab=3.4.*
-  - tensorflow=2.10.*
+  - tensorflow=2.9.*
   - keras-tuner=1.1.*
   - ipdb=0.13.*
   - pip=22.2.*
