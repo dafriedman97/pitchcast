@@ -1,4 +1,4 @@
-import pull_from_api, convert_to_dataframe, feature_engineering, add_pitch_rates
+import pull_from_api, convert_to_dataframe, feature_engineering, add_pitch_rates, pitcher_level_info
 import os
 import argparse
 
@@ -16,8 +16,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-s", "--season", type=str)
     parser.add_argument("-o", "--overwrite", action='store_true')
+    parser.add_argument("-p", "--pitcher_info", action='store_true')
     args = parser.parse_args()
     season = args.season
+    pitcher_info = args.pitcher_info
     overwrite = args.overwrite
 
     # Get paths
@@ -31,3 +33,7 @@ if __name__ == "__main__":
     if overwrite or not os.path.exists(season_path):
         season_df = main(season)
         season_df.to_csv(season_path, index=False)
+        if pitcher_info:
+            pitcher_info = pitcher_level_info.get_pitcher_level_info(season_df)
+            pitcher_info.to_csv(os.path.join(data_dir, f"pitcher_level_info_{season}.csv"), index=False)
+            
