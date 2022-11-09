@@ -15,8 +15,8 @@ st.set_page_config(
 
 ### Load Model + Data ###
 @st.cache
-def load_2022_data():
-    df = pd.read_csv("data/2022.csv")
+def load_pitcher_data():
+    df = pd.read_csv("data/pitcher_level_info_2022.csv")
     return df
 
 @st.cache(allow_output_mutation=True)
@@ -24,12 +24,11 @@ def load_model():
     model = keras.models.load_model("model/saved_models/fit_model_simple.h5")
     return model
     
-df = load_2022_data()
-df_last = df.groupby('pitcher_name').last()
-df_last = df_last.loc[df_last['nth_season_pitch'] >= 100] # restrict to pitchers with >= 100 pitches
-pitchers = list(sorted(df_last.index.unique()))
-pitchers_lefty = df_last['pitcher_lefty']
-pitchers_rates = df_last[['fastball_rate', 'sinker_rate', 'slider_rate', 'changeup_rate', 'knuckle_curve_rate', 'curveball_rate', 'cutter_rate', 'splitter_rate', 'other_rate']]
+pitcher_data = load_pitcher_data()
+pitchers_lefty = pitcher_data['pitcher_lefty'].set_index('pitcher_name')
+pitchers_rates = pitcher_data[
+    ['fastball_rate', 'sinker_rate', 'slider_rate', 'changeup_rate', 'knuckle_curve_rate', 'curveball_rate', 'cutter_rate', 'splitter_rate', 'other_rate']
+].set_index('pitcher_name')
 
 model = load_model()
 
