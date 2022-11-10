@@ -25,10 +25,9 @@ def load_model():
     return model
     
 pitcher_data = load_pitcher_data()
+pitch_types = ['fastball', 'curveball', 'sinker', 'cutter', 'changeup', 'slider', 'splitter', 'knuckle_curve', 'other']
 pitchers_lefty = pitcher_data['pitcher_lefty']
-pitchers_rates = pitcher_data[
-    ['fastball_rate', 'sinker_rate', 'slider_rate', 'changeup_rate', 'knuckle_curve_rate', 'curveball_rate', 'cutter_rate', 'splitter_rate', 'other_rate']
-]
+pitchers_rates = pitcher_data[[f"{pitch}_rate" for pitch in pitch_types]]
 pitchers = sorted(list(pitchers_rates.index))
 
 model = load_model()
@@ -40,14 +39,13 @@ st.title("⚾️ PitchCast")
 
 ## About
 st.markdown("# About")
-st.markdown("- TODO: Explain the project")
-st.markdown("- TODO: Point to code")
-st.markdown("- TODO: Explain that this is simplified model (no ab pitch type counts, lag ball/strike, etc.")
-st.markdown("- TODO: Explain that this is based on 2022 rates")
+st.markdown("""This app allows users to interactively engage with [PitchCast](https://github.com/dafriedman97/pitchcast), a machine learning model designed to predict the next pitch type in MLB baseball games.""")
+st.markdown("""To visualize pitch type predictions, input the features below, such as the pitcher and the game-state, and observe the probabilities of each pitch type.""")
+st.markdown("""Note that this is app uses a simplified version of the PitchCast model which does not require users to e.g. input the pitch types of previous pitches in the current at-bat.""")
 
 ## Demo
 st.markdown("# Demo") 
-st.write("Select the features below and PitchCast will estimate the probabilities of each pitch type")
+st.write("Select the features below and PitchCast will estimate the probabilities of each pitch type. (Predictions are available for pitchers with 100 or more pitches in the 2022 regular season.)")
 
 input, output = st.columns(2)
 
@@ -59,25 +57,29 @@ with input:
         pitcher_rates = pitchers_rates.loc[pitcher]
         batter_hand = st.radio("Batter Hand", ['Righty', 'Lefty'])
         lefties = [pitcher_lefty == "Lefty", batter_hand == "Lefty"]        
-    with st.expander("Count"):
-        balls = st.slider("Balls:", 0, 3)
-        strikes = st.slider("Strikes:", 0, 2)
     with st.expander("Game State"):
-        home_score = st.slider("Home Score", 0, 20)
-        away_score = st.slider("Away Score", 0, 20)
-        inning = st.slider("Inning:", 1, 18)
+        home_score = st.number_input("Home Score", 0, 20)
+        away_score = st.number_input("Away Score", 0, 20)
+        inning = st.number_input("Inning:", 1, 18)
         top_bottom = st.radio("Top/Bottom:", ['Top', 'Bottom'])
-        outs = st.slider("Outs:", 0, 2)
+        outs = st.number_input("Outs:", 0, 2)
         runner_1 = st.checkbox("Runner on First")
         runner_2 = st.checkbox("Runner on Second")
         runner_3 = st.checkbox("Runner on Third")
         game_state = [inning, top_bottom == "Top", outs]
         runners = [runner_1, runner_2, runner_3]
         scores = [home_score, away_score]
+    with st.expander("Count"):
+        balls = st.number_input("Balls:", min_value=0, max_value=3)
+        strikes = st.number_input("Strikes:", min_value=0, max_value=2)
     with st.expander("Pitch Counts"):
-        game_pitch_count = st.slider("Total Pitch Count (by current pitcher):", 0, 125)
-        inning_pitch_count = st.slider("Inning Pitch Count:", 0, 50)
-        at_bat_pitch_count = st.slider("At Bat Pitch Count:", 0, 15)
+        st.write("Note: pitch counts refer to pitches thrown by the _current_ pitcher")
+        min_pitches = int(balls+strikes)
+        at_bat_pitch_count = st.number_input("At Bat Pitch Count:", min_value=min_pitches, max_value=15)
+        min_inning_pitches = int(at_bat_pitch_count)
+        inning_pitch_count = st.number_input("Inning Pitch Count:", min_value=min_inning_pitches, max_value=50)
+        min_game_pitches = int(inning_pitch_count)
+        game_pitch_count = st.number_input("Total Pitch Count:", min_value=min_game_pitches, max_value=125)
         pitch_counts = [game_pitch_count, inning_pitch_count, at_bat_pitch_count]        
 
 with output:
@@ -89,7 +91,8 @@ with output:
 
     # Plot
     fig, ax = plt.subplots(figsize=(7, 5))
-    sns.barplot(y=ui.pitch_types, x=pitch_type_probs, ax=ax, palette='Set2')
+    palette = sns.color_palette("flare", 9)
+    sns.barplot(y=ui.pitch_types, x=pitch_type_probs, ax=ax, palette=palette)
     ax.set_yticklabels([t.get_text().replace("_rate", "") for t in ax.get_yticklabels()], rotation=20)
     ax.set_xlabel("Probability")
     ax.grid()
