@@ -1,5 +1,7 @@
 # PitchCast
 
+![](verlander.gif)
+
 ## About
 
 This project builds a neural network to predict the type of pitch (fastball, curveball, changeup, etc.) that will be thrown next in an MLB game. The predictions are based off the following features:
@@ -47,8 +49,7 @@ The modeling process can also be followed more easily through the notebook `mode
 
 ## Demoing PitchCast
 
-The PitchCast model can be demoed with the interactive app [here](https://pitchcast.herokuapp.com/). In this app, users can select a set of input features and observe the fitted probabilities for each pitch type. An example is shown below.
+The PitchCast model can be demoed with the interactive app [here](https://pitchcast.herokuapp.com/). In this app, users can select a set of input features and observe the fitted probabilities for each pitch type. An example is shown at the top of the README.
 
 Note that this app uses a simplified version of the model in order to reduce the number of features a user must input before seeing projections. For instance, this model does not include the number of pitches of each type thrown so far in the at-bat (which would be a pain for users to have to put in).
 
-![](verlander.gif)
